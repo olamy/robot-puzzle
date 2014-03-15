@@ -1,0 +1,13 @@
+get sources
+git clone https://olamy@github.com/olamy/robot-puzzle.git
+
+You need Apache Maven and jdk 1.7
+
+building project :
+cd robot-puzzle && mvn clean test
+
+or using a shaded jar : 
+* with input from a file
+  mvn clean install && java -jar target/robot-1.0-SNAPSHOT.jar -f src/test/resources/robot-order.txt
+* with input from interactive cli
+  mvn clean install && java -jar target/robot-1.0-SNAPSHOT.jar
