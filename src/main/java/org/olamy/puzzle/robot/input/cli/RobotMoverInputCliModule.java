@@ -20,14 +20,19 @@ package org.olamy.puzzle.robot.input.cli;
  */
 
 import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
+import com.google.inject.name.Names;
 import org.olamy.puzzle.robot.DefaultRobotMover;
 import org.olamy.puzzle.robot.RobotMover;
 import org.olamy.puzzle.robot.input.RobotMoverInputBuilder;
 import org.olamy.puzzle.robot.input.cli.RobotMoverInputBuilderCli;
 import org.olamy.puzzle.robot.listener.DefaultRobotMoveListenerProvider;
+import org.olamy.puzzle.robot.listener.ReportRobotMoveListener;
 import org.olamy.puzzle.robot.listener.RobotMoveListener;
 import org.olamy.puzzle.robot.listener.RobotMoveListenerLogger;
 import org.olamy.puzzle.robot.listener.RobotMoveListenerProvider;
+
+import javax.inject.Singleton;
 
 /**
  * @author <a href="mailto:olamy@apache.org">Olivier Lamy</a>
@@ -46,7 +51,8 @@ public class RobotMoverInputCliModule
     {
         bind( RobotMover.class ).to( DefaultRobotMover.class );
         bind( RobotMoverInputBuilder.class ).to( RobotMoverInputBuilderCli.class );
-        bind( RobotMoveListener.class ).to( RobotMoveListenerLogger.class );
+        bind( RobotMoveListener.class ).annotatedWith( Names.named( "logger" ) ).to( RobotMoveListenerLogger.class );
+        bind( RobotMoveListener.class ).annotatedWith( Names.named("report") ).to( ReportRobotMoveListener.class );
         bind( RobotMoveListenerProvider.class ).to( DefaultRobotMoveListenerProvider.class );
 
     }

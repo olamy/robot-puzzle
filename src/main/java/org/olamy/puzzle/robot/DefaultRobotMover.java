@@ -39,8 +39,13 @@ public class DefaultRobotMover
 
     private Logger log = LoggerFactory.getLogger( getClass() );
 
+    private List<RobotMoveListener> listeners;
+
     @Inject
-    private RobotMoveListenerProvider robotMoveListenerProvider;
+    public DefaultRobotMover( RobotMoveListenerProvider robotMoveListenerProvider )
+    {
+        this.listeners = robotMoveListenerProvider.get();
+    }
 
     @Override
     public Robot handleMoves( RobotMoverInput robotMoverInput )
@@ -83,7 +88,7 @@ public class DefaultRobotMover
             Position newPosition = new Position( robot.getPosition().getX(), robot.getPosition().getY() );
             Orientation newOrientation = Orientation.build( robot.getOrientation().asString() );
 
-            for ( RobotMoveListener listener : robotMoveListenerProvider.get() )
+            for ( RobotMoveListener listener : listeners )
             {
                 RobotMoveEvent robotMoveEvent = new RobotMoveEvent() //
                     .setPreviousPosition( previousPosition ) //

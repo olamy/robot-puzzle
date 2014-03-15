@@ -19,6 +19,7 @@ package org.olamy.puzzle.robot.listener;
  * under the License.
  */
 
+import com.google.inject.BindingAnnotation;
 import org.olamy.puzzle.robot.Position;
 import org.olamy.puzzle.robot.RobotMoveEvent;
 import org.olamy.puzzle.robot.RobotMover;
