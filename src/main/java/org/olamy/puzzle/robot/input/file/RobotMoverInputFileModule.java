@@ -20,10 +20,12 @@ package org.olamy.puzzle.robot.input.file;
  */
 
 import com.google.inject.AbstractModule;
+import com.google.inject.name.Names;
 import org.olamy.puzzle.robot.DefaultRobotMover;
 import org.olamy.puzzle.robot.RobotMover;
 import org.olamy.puzzle.robot.input.RobotMoverInputBuilder;
 import org.olamy.puzzle.robot.listener.DefaultRobotMoveListenerProvider;
+import org.olamy.puzzle.robot.listener.ReportRobotMoveListener;
 import org.olamy.puzzle.robot.listener.RobotMoveListener;
 import org.olamy.puzzle.robot.listener.RobotMoveListenerLogger;
 import org.olamy.puzzle.robot.listener.RobotMoveListenerProvider;
@@ -49,7 +51,8 @@ public class RobotMoverInputFileModule
         bind( RobotMover.class ).to( DefaultRobotMover.class );
         bind( RobotMoverInputBuilder.class ).to( RobotMoverInputBuilderFile.class );
         bind( File.class ).annotatedWith( RobotMoverInputFile.class ).toInstance( this.inputFile );
-        bind( RobotMoveListener.class ).to( RobotMoveListenerLogger.class );
+        bind( RobotMoveListener.class ).annotatedWith( Names.named( "logger" ) ).to( RobotMoveListenerLogger.class );
+        bind( RobotMoveListener.class ).annotatedWith( Names.named( "report" ) ).to( ReportRobotMoveListener.class );
         bind( RobotMoveListenerProvider.class ).to( DefaultRobotMoveListenerProvider.class );
 
     }
