@@ -21,6 +21,7 @@ package org.olamy.puzzle.robot.input.file;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
+import org.olamy.puzzle.robot.AbstractRobotMoverModule;
 import org.olamy.puzzle.robot.DefaultRobotMover;
 import org.olamy.puzzle.robot.RobotMover;
 import org.olamy.puzzle.robot.input.RobotMoverInputBuilder;
@@ -36,8 +37,9 @@ import java.io.File;
  * @author <a href="mailto:olamy@apache.org">Olivier Lamy</a>
  */
 public class RobotMoverInputFileModule
-    extends AbstractModule
+    extends AbstractRobotMoverModule
 {
+
     private File inputFile;
 
     public RobotMoverInputFileModule( File inputFile )
@@ -46,14 +48,9 @@ public class RobotMoverInputFileModule
     }
 
     @Override
-    protected void configure()
+    protected void configureInputModule()
     {
-        bind( RobotMover.class ).to( DefaultRobotMover.class );
         bind( RobotMoverInputBuilder.class ).to( RobotMoverInputBuilderFile.class );
         bind( File.class ).annotatedWith( RobotMoverInputFile.class ).toInstance( this.inputFile );
-        bind( RobotMoveListener.class ).annotatedWith( Names.named( "logger" ) ).to( RobotMoveListenerLogger.class );
-        bind( RobotMoveListener.class ).annotatedWith( Names.named( "report" ) ).to( ReportRobotMoveListener.class );
-        bind( RobotMoveListenerProvider.class ).to( DefaultRobotMoveListenerProvider.class );
-
     }
 }

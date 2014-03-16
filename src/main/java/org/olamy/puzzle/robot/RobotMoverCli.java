@@ -68,8 +68,8 @@ public class RobotMoverCli
         try
         {
             Robot robot = robotMover.handleMoves( moverInputBuilder.getRobotMoverInput() );
-            logger.info( "end handling moving" );
-            logger.info( "end positions " + robot );
+            logger.debug( "end handling moving" );
+            logger.debug( "end positions {}", robot );
         }
         catch ( InvalidInstruction e )
         {
