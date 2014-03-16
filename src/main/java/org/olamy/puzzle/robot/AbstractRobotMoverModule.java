@@ -21,6 +21,8 @@ package org.olamy.puzzle.robot;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
+import org.olamy.puzzle.robot.input.DefaultInputValidator;
+import org.olamy.puzzle.robot.input.InputValidator;
 import org.olamy.puzzle.robot.listener.DefaultRobotMoveListenerProvider;
 import org.olamy.puzzle.robot.listener.ReportRobotMoveListener;
 import org.olamy.puzzle.robot.listener.RobotMoveListener;
@@ -39,6 +41,7 @@ public abstract class AbstractRobotMoverModule
     protected void configure()
     {
         bind( RobotMover.class ).to( DefaultRobotMover.class );
+        bind( InputValidator.class ).to( DefaultInputValidator.class );
         bind( RobotMoveListener.class ).annotatedWith( Names.named( "logger" ) ).to( RobotMoveListenerLogger.class );
         bind( RobotMoveListener.class ).annotatedWith( Names.named( "report" ) ).to( ReportRobotMoveListener.class );
         bind( RobotMoveListenerProvider.class ).to( DefaultRobotMoveListenerProvider.class );

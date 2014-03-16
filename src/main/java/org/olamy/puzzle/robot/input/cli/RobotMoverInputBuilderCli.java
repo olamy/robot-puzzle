@@ -24,11 +24,15 @@ import org.olamy.puzzle.robot.Position;
 import org.olamy.puzzle.robot.RobotOrder;
 import org.olamy.puzzle.robot.Table;
 import org.olamy.puzzle.robot.UnknownOrientationException;
+import org.olamy.puzzle.robot.input.InputValidator;
 import org.olamy.puzzle.robot.input.RobotMoverInput;
 import org.olamy.puzzle.robot.input.RobotMoverInputBuilder;
 import org.olamy.puzzle.robot.input.RobotMoverInputException;
 import org.olamy.puzzle.robot.util.RobotOrderUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.io.Console;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -40,6 +44,16 @@ import java.util.List;
 public class RobotMoverInputBuilderCli
     implements RobotMoverInputBuilder
 {
+
+    private InputValidator inputValidator;
+
+    private Logger logger = LoggerFactory.getLogger( getClass() );
+
+    @Inject
+    public RobotMoverInputBuilderCli( InputValidator inputValidator )
+    {
+        this.inputValidator = inputValidator;
+    }
 
     // FIXME handle bad input
     @Override
@@ -89,8 +103,14 @@ public class RobotMoverInputBuilderCli
     {
         List<String> orders = new ArrayList<>();
         String order = console.readLine();
+
         while ( order != null && !order.isEmpty() )
         {
+            if ( !inputValidator.validateInput( order ) )
+            {
+                writer.write( "Entry not correct please use a correct format" );
+                continue;
+            }
             orders.add( order );
             order = console.readLine();
         }

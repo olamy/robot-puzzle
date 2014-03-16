@@ -83,21 +83,26 @@ public class DefaultRobotMover
             Position previousPosition = new Position( robot.getPosition().getX(), robot.getPosition().getY() );
             Orientation previousOrientation = Orientation.build( robot.getOrientation().asString() );
 
-            applyOrder( robot, order, table );
-
-            Position newPosition = new Position( robot.getPosition().getX(), robot.getPosition().getY() );
-            Orientation newOrientation = Orientation.build( robot.getOrientation().asString() );
-
-            for ( RobotMoveListener listener : listeners )
+            if (applyOrder( robot, order, table ))
             {
-                RobotMoveEvent robotMoveEvent = new RobotMoveEvent() //
-                    .setPreviousPosition( previousPosition ) //
-                    .setPreviousOrientation( previousOrientation ) //
-                    .setPosition( newPosition ) //
-                    .setOrientation( newOrientation ) //
-                    .setOrder( order );
-                listener.move( robotMoveEvent );
+                Position newPosition = new Position( robot.getPosition().getX(), robot.getPosition().getY() );
+                Orientation newOrientation = Orientation.build( robot.getOrientation().asString() );
+
+                for ( RobotMoveListener listener : listeners )
+                {
+                    RobotMoveEvent robotMoveEvent = new RobotMoveEvent() //
+                        .setPreviousPosition( previousPosition ) //
+                        .setPreviousOrientation( previousOrientation ) //
+                        .setPosition( newPosition ) //
+                        .setOrientation( newOrientation ) //
+                        .setOrder( order );
+                    listener.move( robotMoveEvent );
+                }
+            } else {
+                log.warn( "skip move order {} as out of the table", order );
             }
+
+
         }
     }
 
@@ -105,13 +110,13 @@ public class DefaultRobotMover
      * @param robot
      * @param order
      * @param table
-     * @return true if the robot has moved
+     * @return true if the robot has moved or a report command
      * @throws UnknownOrientationException
      */
     private boolean applyOrder( Robot robot, String order, Table table )
         throws UnknownOrientationException
     {
-        //log.debug( "move mover {} with order {}", Arrays.asList( robot, order ).toArray() );
+        log.debug( "move {} with order {}", robot, order );
         switch ( order )
         {
             case LEFT_COMMAND:
@@ -126,11 +131,12 @@ public class DefaultRobotMover
                 }
                 return true;
             case REPORT_COMMAND:
-                log.info( "Current position: {},{},{}", //
-                          robot.getPosition().getX(), //
-                          robot.getPosition().getY(), //
-                          robot.getOrientation().asString() );
-                break;
+                //log.info( "Current position: {},{},{}", //
+                //          robot.getPosition().getX(), //
+                //          robot.getPosition().getY(), //
+                //          robot.getOrientation().asString() );
+                // nothing as it's done by the move listener
+                return true;
             default:
                 log.warn( "ignore unknown command " + order );
                 break;

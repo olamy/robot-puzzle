@@ -23,6 +23,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.olamy.puzzle.robot.RobotOrder;
 import org.olamy.puzzle.robot.UnknownOrientationException;
+import org.olamy.puzzle.robot.input.InputValidator;
 import org.olamy.puzzle.robot.input.RobotMoverInput;
 import org.olamy.puzzle.robot.input.RobotMoverInputBuilder;
 import org.olamy.puzzle.robot.util.RobotOrderUtils;
@@ -50,14 +51,17 @@ public class RobotMoverInputBuilderFile
 
     private RobotMoverInput robotMoverInput;
 
+    private InputValidator inputValidator;
+
     /**
      * with a default file content see file robot-order in unit tests
      *
      * @param robotMoverInputFile
      */
     @Inject
-    public RobotMoverInputBuilderFile( @RobotMoverInputFile File robotMoverInputFile )
+    public RobotMoverInputBuilderFile( @RobotMoverInputFile File robotMoverInputFile, InputValidator inputValidator )
     {
+        this.inputValidator = inputValidator;
         if ( robotMoverInputFile == null )
         {
             throw new IllegalArgumentException( "file cannot be null " );
@@ -106,6 +110,11 @@ public class RobotMoverInputBuilderFile
             for ( String line : lines )
             {
                 line = StringUtils.trim( line );
+                if ( !inputValidator.validateInput( line ) )
+                {
+                    log.warn( "skip line entry '{}' as it's not a correct order" );
+                    continue;
+                }
                 log.debug( "handle line content {}", line );
                 // we could accept the user configuring the size of the table as first entry
                 /*

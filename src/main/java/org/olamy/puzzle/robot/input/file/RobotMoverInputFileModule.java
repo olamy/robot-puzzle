@@ -19,17 +19,8 @@ package org.olamy.puzzle.robot.input.file;
  * under the License.
  */
 
-import com.google.inject.AbstractModule;
-import com.google.inject.name.Names;
 import org.olamy.puzzle.robot.AbstractRobotMoverModule;
-import org.olamy.puzzle.robot.DefaultRobotMover;
-import org.olamy.puzzle.robot.RobotMover;
 import org.olamy.puzzle.robot.input.RobotMoverInputBuilder;
-import org.olamy.puzzle.robot.listener.DefaultRobotMoveListenerProvider;
-import org.olamy.puzzle.robot.listener.ReportRobotMoveListener;
-import org.olamy.puzzle.robot.listener.RobotMoveListener;
-import org.olamy.puzzle.robot.listener.RobotMoveListenerLogger;
-import org.olamy.puzzle.robot.listener.RobotMoveListenerProvider;
 
 import java.io.File;
 
