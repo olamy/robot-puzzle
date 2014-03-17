@@ -20,11 +20,12 @@ package org.olamy.puzzle.robot;
  */
 
 import com.beust.jcommander.JCommander;
+import com.beust.jcommander.ParameterException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.olamy.puzzle.robot.input.RobotMoverInputBuilder;
-import org.olamy.puzzle.robot.input.cli.RobotMoverInputCliModule;
 import org.olamy.puzzle.robot.input.RobotMoverInputException;
+import org.olamy.puzzle.robot.input.cli.RobotMoverInputCliModule;
 import org.olamy.puzzle.robot.input.file.RobotMoverInputFileModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,9 +44,25 @@ public class RobotMoverCli
         Logger logger = LoggerFactory.getLogger( RobotMoverCli.class );
         final RobotMoverCliParameters parameters = new RobotMoverCliParameters();
         JCommander jCommander = new JCommander( parameters );
-        jCommander.parse( args );
+        jCommander.setProgramName( "Robot Mover" );
+        try
+        {
+            jCommander.parse( args );
+        }
+        catch ( ParameterException e )
+        {
+            System.out.println( "Incorrect options usage." );
+            jCommander.usage();
+            return;
+        }
 
         Injector injector = null;
+
+        if ( parameters.help )
+        {
+            jCommander.usage();
+            return;
+        }
 
         if ( parameters.commandFile == null )
         {

@@ -29,7 +29,10 @@ import com.beust.jcommander.Parameters;
 public class RobotMoverCliParameters
 {
 
-    @Parameter(names = { "-f", "--file" }, description = "command input file path")
+    @Parameter(names = { "-f", "--file" }, description = "orders input file path")
     protected String commandFile;
+
+    @Parameter( names = { "-h", "--help" }, description = "show help" )
+    protected boolean help;
 
 }
