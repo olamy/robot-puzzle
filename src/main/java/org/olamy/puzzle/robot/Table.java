@@ -23,6 +23,9 @@ package org.olamy.puzzle.robot;
  */
 public class Table
 {
+
+    public static final Table DEFAULT_TABLE = new Table( new TableSize( 5, 5 ) );
+
     private final TableSize tableSize;
 
     public Table( TableSize tableSize )

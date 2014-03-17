@@ -69,13 +69,14 @@ public class RobotOrderUtils
     }
 
     /**
-     * @param line the order line
+     * @param line  the order line
+     * @param table the used table
      * @return build the object considering and validating the received order is a PLACE
      * @throws UnknownOrientationException                if the orientation is not correct
      * @throws java.lang.IllegalArgumentException         if the line order is not correct to a PLACE order
      * @throws org.olamy.puzzle.robot.OutOfTableException if the start position is out of the table
      */
-    public static RobotOrder buildRobotOrderStart( String line )
+    public static RobotOrder buildRobotOrderStart( String line, Table table )
         throws OutOfTableException
     {
         // line content : PLACE x y orientation ( PLACE 0,0,NORTH )
@@ -91,8 +92,9 @@ public class RobotOrderUtils
             try
             {
                 return new RobotOrder().setStartPosition( //
-                                                          new Position( Short.valueOf( matcher.group( 1 ) ).shortValue(), //
-                                                                        Short.valueOf( matcher.group( 2 ) ).shortValue() )
+                                                          new Position(
+                                                              Short.valueOf( matcher.group( 1 ) ).shortValue(), //
+                                                              Short.valueOf( matcher.group( 2 ) ).shortValue() )
                 ) //
                     .setStartOrientation( Orientation.build( matcher.group( 3 ) ) );
             }

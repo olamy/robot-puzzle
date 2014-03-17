@@ -3,9 +3,9 @@ package org.olamy.puzzle.robot.util;
 import org.junit.Assert;
 import org.junit.Test;
 import org.olamy.puzzle.robot.Orientation;
+import org.olamy.puzzle.robot.OutOfTableException;
 import org.olamy.puzzle.robot.RobotOrder;
 import org.olamy.puzzle.robot.Table;
-import org.olamy.puzzle.robot.UnknownOrientationException;
 
 /**
  * @author Olivier Lamy
@@ -33,7 +33,7 @@ public class RobotOrderUtilsTest
     public void test_build_correct_robot_order()
         throws Exception
     {
-        RobotOrder robotOrder = RobotOrderUtils.buildRobotOrderStart( "PLACE 2,4,NORTH" );
+        RobotOrder robotOrder = RobotOrderUtils.buildRobotOrderStart( "PLACE 2,4,NORTH", Table.DEFAULT_TABLE );
         Assert.assertNotNull( robotOrder );
         Assert.assertNotNull( robotOrder.getStartOrientation() );
         Assert.assertEquals( Orientation.NORTH, robotOrder.getStartOrientation().asString() );
@@ -46,7 +46,20 @@ public class RobotOrderUtilsTest
     public void test_build_correct_robot_order_wrong_order()
         throws Exception
     {
-        RobotOrderUtils.buildRobotOrderStart( "PLACE 2,4,BEER" );
+        RobotOrderUtils.buildRobotOrderStart( "PLACE 2,4,BEER", Table.DEFAULT_TABLE );
+    }
+
+    @Test( expected = OutOfTableException.class )
+    public void test_build_robot_order_out_of_table()
+        throws Exception
+    {
+        RobotOrder robotOrder = RobotOrderUtils.buildRobotOrderStart( "PLACE 2,4,NORTH", Table.DEFAULT_TABLE );
+        Assert.assertNotNull( robotOrder );
+        Assert.assertNotNull( robotOrder.getStartOrientation() );
+        Assert.assertEquals( Orientation.NORTH, robotOrder.getStartOrientation().asString() );
+        Assert.assertNotNull( robotOrder.getStartPosition() );
+        Assert.assertEquals( 2, robotOrder.getStartPosition().getX() );
+        Assert.assertEquals( 4, robotOrder.getStartPosition().getY() );
     }
 
 }

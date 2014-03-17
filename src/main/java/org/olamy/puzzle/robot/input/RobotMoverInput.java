@@ -48,8 +48,8 @@ public class RobotMoverInput
     {
         if ( table == null )
         {
-            // we use a default 5 x 5
-            table = new Table( new TableSize( 5, 5 ) );
+            // we use the default table
+            table = Table.DEFAULT_TABLE;
         }
         return table;
     }
