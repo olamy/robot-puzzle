@@ -132,8 +132,9 @@ public class DefaultRobotMover
                 if ( !outOfTable( table, position ) )
                 {
                     robot.setPosition( position );
+                    return true;
                 }
-                return true;
+                return false;
             case REPORT_COMMAND:
                 //log.info( "Current position: {},{},{}", //
                 //          robot.getPosition().getX(), //
