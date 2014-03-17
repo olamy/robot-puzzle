@@ -87,12 +87,13 @@ public class RobotMoverInputBuilderCli
     }
 
     private RobotOrder getRobotOrder( Console console, PrintWriter writer )
-        throws NumberFormatException, UnknownOrientationException
+        throws UnknownOrientationException
     {
         writer.write( "Robot start position and orientation (sample PLACE 1,2,EAST ) : " );
         console.flush();
         String robotStart = console.readLine();
         RobotOrder robotOrder = RobotOrderUtils.buildRobotOrderStart( robotStart );
+
         writer.write( "Robot orders (sample RIGHT, LEFT, MOVE, REPORT ) (end input with empty line) : "
                           + SystemUtils.LINE_SEPARATOR );
         console.flush();

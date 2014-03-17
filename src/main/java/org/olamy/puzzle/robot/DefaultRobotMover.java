@@ -19,9 +19,11 @@ package org.olamy.puzzle.robot;
  * under the License.
  */
 
+import org.apache.commons.lang.StringUtils;
 import org.olamy.puzzle.robot.input.RobotMoverInput;
 import org.olamy.puzzle.robot.listener.RobotMoveListener;
 import org.olamy.puzzle.robot.listener.RobotMoveListenerProvider;
+import org.olamy.puzzle.robot.util.RobotOrderUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,7 +85,7 @@ public class DefaultRobotMover
             Position previousPosition = new Position( robot.getPosition().getX(), robot.getPosition().getY() );
             Orientation previousOrientation = Orientation.build( robot.getOrientation().asString() );
 
-            if (applyOrder( robot, order, table ))
+            if ( applyOrder( robot, order, table ) )
             {
                 Position newPosition = new Position( robot.getPosition().getX(), robot.getPosition().getY() );
                 Orientation newOrientation = Orientation.build( robot.getOrientation().asString() );
@@ -98,7 +100,9 @@ public class DefaultRobotMover
                         .setOrder( order );
                     listener.move( robotMoveEvent );
                 }
-            } else {
+            }
+            else
+            {
                 log.warn( "skip move order {} as out of the table", order );
             }
 
@@ -113,7 +117,7 @@ public class DefaultRobotMover
      * @return true if the robot has moved or a report command
      * @throws UnknownOrientationException
      */
-    private boolean applyOrder( Robot robot, String order, Table table )
+    protected boolean applyOrder( Robot robot, String order, Table table )
         throws UnknownOrientationException
     {
         log.debug( "move {} with order {}", robot, order );
@@ -138,6 +142,14 @@ public class DefaultRobotMover
                 // nothing as it's done by the move listener
                 return true;
             default:
+                // special case can be a PLACE command so not in the switch/case !!
+                if ( StringUtils.startsWith( order, PLACE_COMMAND ) )
+                {
+                    RobotOrder robotOrder = RobotOrderUtils.buildRobotOrderStart( order );
+                    robot.setOrientation( robotOrder.getStartOrientation() );
+                    robot.setPosition( robotOrder.getStartPosition() );
+                    return true;
+                }
                 log.warn( "ignore unknown command " + order );
                 break;
         }

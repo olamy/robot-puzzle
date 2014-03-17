@@ -73,12 +73,12 @@ public class RobotMoverCli
         }
         catch ( InvalidInstruction e )
         {
-            logger.error( e.getMessage(), e );
+            logger.error( e.getMessage() );
             System.exit( 1 );
         }
         catch ( RobotMoverInputException e )
         {
-            logger.error( e.getMessage(), e );
+            logger.error( e.getMessage() );
             System.exit( 1 );
         }
     }

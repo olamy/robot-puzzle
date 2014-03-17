@@ -22,16 +22,28 @@ package org.olamy.puzzle.robot.util;
 import org.apache.commons.lang.StringUtils;
 import org.olamy.puzzle.robot.Orientation;
 import org.olamy.puzzle.robot.Position;
-import org.olamy.puzzle.robot.RobotMover;
 import org.olamy.puzzle.robot.RobotOrder;
 import org.olamy.puzzle.robot.Table;
 import org.olamy.puzzle.robot.UnknownOrientationException;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author <a href="mailto:olamy@apache.org">Olivier Lamy</a>
  */
 public class RobotOrderUtils
 {
+    /**
+     * pattern for PLACE order: PLACE x,y,NORTH/SOUTH/EAST/WEST
+     */
+    public static final Pattern PLACE_ORDER_PATTERN = Pattern.compile( "PLACE (\\d+),(\\d+),\\b(" //
+                                                                           + Orientation.NORTH + //
+                                                                           "|" + Orientation.SOUTH + //
+                                                                           "|" + Orientation.EAST + //
+                                                                           "|" + Orientation.WEST + //
+                                                                           "\\b)" );
+
     private RobotOrderUtils()
     {
         // no op
@@ -49,8 +61,13 @@ public class RobotOrderUtils
         return new Table( new Position( Short.valueOf( tableStart[0] ), Short.valueOf( tableStart[1] ) ) );
     }
 
+    /**
+     * @param line the order line
+     * @return build the object considering and validating the received order is a PLACE (otherwise throw an {@link java.lang.IllegalArgumentException}
+     * @throws UnknownOrientationException
+     */
     public static RobotOrder buildRobotOrderStart( String line )
-        throws NumberFormatException, UnknownOrientationException
+        throws UnknownOrientationException
     {
         // line content : PLACE x y orientation ( PLACE 0,0,NORTH )
 
@@ -59,25 +76,21 @@ public class RobotOrderUtils
             throw new IllegalArgumentException( "robot InitialPosition input cannot be empty " );
         }
 
-        // control we start with PLACE
-        if ( !StringUtils.startsWith( StringUtils.trim( line ), RobotMover.PLACE_COMMAND ) )
+        Matcher matcher = PLACE_ORDER_PATTERN.matcher( line );
+        if ( matcher.matches() )
         {
-            throw new IllegalArgumentException(
-                "robot InitialPosition input must start with " + RobotMover.PLACE_COMMAND );
+            return new RobotOrder().setStartPosition( //
+                                                      new Position( Short.valueOf( matcher.group( 1 ) ).shortValue(), //
+                                                                    Short.valueOf( matcher.group( 2 ) ).shortValue() )
+            ) //
+                .setStartOrientation( Orientation.build( matcher.group( 3 ) ) );
+        }
+        else
+        {
+            throw new IllegalArgumentException( "robot PLACE order '" + line + "' is not correct " );
         }
 
-        String[] robotInitialPosition =
-            StringUtils.split( StringUtils.trim( StringUtils.substringAfter( line, RobotMover.PLACE_COMMAND ) ), ',' );
-        if ( robotInitialPosition.length != 3 )
-        {
-            throw new IllegalArgumentException( "robot InitialPosition input " + line + " is not correct " );
-        }
-        return new RobotOrder().setStartPosition( //
-                                                  new Position( Short.valueOf( robotInitialPosition[0] ).shortValue(),
-                                                                //
-                                                                Short.valueOf( robotInitialPosition[1] ).shortValue() )
-        ) //
-            .setStartOrientation( Orientation.build( robotInitialPosition[2] ) );
 
     }
+
 }

@@ -15,7 +15,7 @@ import org.olamy.puzzle.robot.input.file.RobotMoverInputFileModule;
 import java.io.File;
 import java.util.Arrays;
 
-@RunWith(BlockJUnit4ClassRunner.class)
+@RunWith( BlockJUnit4ClassRunner.class )
 public class MoverTest
 {
     Injector injector;
@@ -105,6 +105,13 @@ public class MoverTest
         Assert.assertEquals( 3, robot.getPosition().getX() );
         Assert.assertEquals( 3, robot.getPosition().getY() );
         Assert.assertEquals( Orientation.NORTH, robot.getOrientation().asString() );
+
+    }
+
+    @Test
+    public void test_out_of_table_move()
+        throws Exception
+    {
 
     }
 

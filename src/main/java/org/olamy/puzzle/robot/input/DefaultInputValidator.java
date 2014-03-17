@@ -22,6 +22,7 @@ package org.olamy.puzzle.robot.input;
 
 import org.apache.commons.lang.StringUtils;
 import org.olamy.puzzle.robot.RobotMover;
+import org.olamy.puzzle.robot.util.RobotOrderUtils;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -44,7 +45,7 @@ public class DefaultInputValidator
     @Override
     public boolean validateInput( String order )
     {
-        return ( possibleOrders.contains( StringUtils.trim( order ) ) //
-            || StringUtils.startsWith( order, RobotMover.PLACE_COMMAND ) );
+        return StringUtils.isNotBlank( order ) && ( possibleOrders.contains( StringUtils.trim( order ) ) //
+            || RobotOrderUtils.PLACE_ORDER_PATTERN.matcher( order ).matches() );
     }
 }
