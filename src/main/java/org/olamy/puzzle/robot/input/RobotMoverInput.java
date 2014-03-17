@@ -22,6 +22,7 @@ package org.olamy.puzzle.robot.input;
 import org.olamy.puzzle.robot.Position;
 import org.olamy.puzzle.robot.RobotOrder;
 import org.olamy.puzzle.robot.Table;
+import org.olamy.puzzle.robot.TableSize;
 
 /**
  * @author <a href="mailto:olamy@apache.org">Olivier Lamy</a>
@@ -48,7 +49,7 @@ public class RobotMoverInput
         if ( table == null )
         {
             // we use a default 5 x 5
-            table = new Table( new Position( 5, 5 ) );
+            table = new Table( new TableSize( 5, 5 ) );
         }
         return table;
     }

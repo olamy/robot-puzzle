@@ -23,6 +23,7 @@ import org.apache.commons.lang.SystemUtils;
 import org.olamy.puzzle.robot.Position;
 import org.olamy.puzzle.robot.RobotOrder;
 import org.olamy.puzzle.robot.Table;
+import org.olamy.puzzle.robot.TableSize;
 import org.olamy.puzzle.robot.UnknownOrientationException;
 import org.olamy.puzzle.robot.input.InputValidator;
 import org.olamy.puzzle.robot.input.RobotMoverInput;
@@ -74,7 +75,7 @@ public class RobotMoverInputBuilderCli
              */
             RobotMoverInput moverInput = new RobotMoverInput();
 
-            moverInput.setTable( new Table( new Position( 5, 5 ) ) );
+            moverInput.setTable( new Table( new TableSize( 5, 5 ) ) );
 
             moverInput.setRobotOrder( getRobotOrder( console, writer ) );
 

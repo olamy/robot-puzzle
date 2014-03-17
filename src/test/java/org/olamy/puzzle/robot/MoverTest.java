@@ -20,11 +20,15 @@ public class MoverTest
 {
     Injector injector;
 
+    RobotMover robotMover;
+
     @Before
     public void initGuice()
     {
         injector =
             Guice.createInjector( new RobotMoverInputFileModule( new File( "./src/test/resources/robot-order.txt" ) ) );
+
+        robotMover = injector.getInstance( RobotMover.class );
     }
 
     @Test
@@ -34,8 +38,8 @@ public class MoverTest
         RobotMoverInputBuilder moverInputBuilder = injector.getInstance( RobotMoverInputBuilderFile.class );
         RobotMoverInput input = moverInputBuilder.getRobotMoverInput();
         Assert.assertNotNull( input );
-        Assert.assertEquals( 5, input.getTable().getPosition().getX() );
-        Assert.assertEquals( 5, input.getTable().getPosition().getY() );
+        Assert.assertEquals( 5, input.getTable().getTableSize().getX() );
+        Assert.assertEquals( 5, input.getTable().getTableSize().getY() );
 
         Assert.assertEquals( 5, input.getRobotOrder().getOrders().size() );
 
@@ -59,7 +63,6 @@ public class MoverTest
 
         RobotMoverInput moverInput = new RobotMoverInput().setRobotOrder( robotOrder );
 
-        RobotMover robotMover = injector.getInstance( RobotMover.class );
         Robot robot = robotMover.handleMoves( moverInput );
         Assert.assertNotNull( robot );
 
@@ -81,7 +84,6 @@ public class MoverTest
             .setOrders( Arrays.asList( "LEFT", "REPORT" ) );
         RobotMoverInput moverInput = new RobotMoverInput().setRobotOrder( robotOrder );
 
-        RobotMover robotMover = injector.getInstance( RobotMover.class );
         Robot robot = robotMover.handleMoves( moverInput );
         Assert.assertNotNull( robot );
 
@@ -92,13 +94,15 @@ public class MoverTest
 
     }
 
+    /**
+     * assert move from input files
+     */
     @Test
     public void robot_test_from_input_file()
         throws Exception
     {
         RobotMoverInputBuilder moverInputBuilder = injector.getInstance( RobotMoverInputBuilderFile.class );
 
-        RobotMover robotMover = injector.getInstance( RobotMover.class );
         Robot robot = robotMover.handleMoves( moverInputBuilder.getRobotMoverInput() );
         Assert.assertNotNull( robot );
 
@@ -108,11 +112,44 @@ public class MoverTest
 
     }
 
+    /**
+     * only out of table moves so no changes from initial position
+     */
     @Test
-    public void test_out_of_table_move()
+    public void test_out_of_table_move_no_change()
         throws Exception
     {
+        RobotOrder robotOrder = new RobotOrder() //
+            .setStartPosition( new Position( 0, 0 ) ) //
+            .setStartOrientation( Orientation.build( "SOUTH" ) ) //
+            .setOrders( Arrays.asList( "MOVE", "MOVE", "REPORT" ) );
+        RobotMoverInput moverInput = new RobotMoverInput().setRobotOrder( robotOrder );
 
+        Robot robot = robotMover.handleMoves( moverInput );
+        Assert.assertNotNull( robot );
+        Assert.assertEquals( 0, robot.getPosition().getX() );
+        Assert.assertEquals( 0, robot.getPosition().getY() );
+        Assert.assertEquals( Orientation.SOUTH, robot.getOrientation().asString() );
+    }
+
+    /**
+     * only out of table moves so no changes from initial position
+     */
+    @Test
+    public void test_out_of_table_move_only_one_change_acccepted()
+        throws Exception
+    {
+        RobotOrder robotOrder = new RobotOrder() //
+            .setStartPosition( new Position( 0, 0 ) ) //
+            .setStartOrientation( Orientation.build( "NORTH" ) ) //
+            .setOrders( Arrays.asList( "MOVE", "LEFT", "MOVE", "REPORT" ) );
+        RobotMoverInput moverInput = new RobotMoverInput().setRobotOrder( robotOrder );
+
+        Robot robot = robotMover.handleMoves( moverInput );
+        Assert.assertNotNull( robot );
+        Assert.assertEquals( 0, robot.getPosition().getX() );
+        Assert.assertEquals( 1, robot.getPosition().getY() );
+        Assert.assertEquals( Orientation.WEST, robot.getOrientation().asString() );
     }
 
 }

@@ -24,6 +24,7 @@ import org.olamy.puzzle.robot.Orientation;
 import org.olamy.puzzle.robot.Position;
 import org.olamy.puzzle.robot.RobotOrder;
 import org.olamy.puzzle.robot.Table;
+import org.olamy.puzzle.robot.TableSize;
 import org.olamy.puzzle.robot.UnknownOrientationException;
 
 import java.util.regex.Matcher;
@@ -58,7 +59,7 @@ public class RobotOrderUtils
         {
             throw new IllegalArgumentException( "tableStart input " + line + " is not correct " );
         }
-        return new Table( new Position( Short.valueOf( tableStart[0] ), Short.valueOf( tableStart[1] ) ) );
+        return new Table( new TableSize( Short.valueOf( tableStart[0] ), Short.valueOf( tableStart[1] ) ) );
     }
 
     /**

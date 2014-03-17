@@ -178,7 +178,10 @@ public class DefaultRobotMover
 
     private boolean outOfTable( Table table, Position position )
     {
-        return position.getX() > table.getPosition().getX() || position.getY() > table.getPosition().getY();
+        return position.getX() > table.getTableSize().getX() //
+            || position.getY() > table.getTableSize().getY() //
+            || position.getX() < 0//
+            || position.getY() < 0;
     }
 
 }

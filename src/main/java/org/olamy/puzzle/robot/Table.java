@@ -23,23 +23,22 @@ package org.olamy.puzzle.robot;
  */
 public class Table
 {
+    private final TableSize tableSize;
 
-    private final Position position;
-
-    public Table( Position position )
+    public Table( TableSize tableSize )
     {
-        this.position = position;
+        this.tableSize = tableSize;
     }
 
-    public Position getPosition()
+    public TableSize getTableSize()
     {
-        return position;
+        return tableSize;
     }
 
     @Override
     public String toString()
     {
-        return "Table [position=" + position + "]";
+        return "Table [tableSize=" + tableSize + "]";
     }
 
 }
