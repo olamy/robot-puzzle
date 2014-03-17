@@ -78,7 +78,7 @@ public class DefaultRobotMover
     }
 
     private void applyOrders( List<String> orders, Robot robot, Table table )
-        throws UnknownOrientationException
+        throws UnknownOrientationException, InvalidInstruction
     {
         for ( String order : orders )
         {
@@ -118,7 +118,7 @@ public class DefaultRobotMover
      * @throws UnknownOrientationException
      */
     protected boolean applyOrder( Robot robot, String order, Table table )
-        throws UnknownOrientationException
+        throws UnknownOrientationException, InvalidInstruction
     {
         log.debug( "move {} with order {}", robot, order );
         switch ( order )
@@ -151,10 +151,8 @@ public class DefaultRobotMover
                     robot.setPosition( robotOrder.getStartPosition() );
                     return true;
                 }
-                log.warn( "ignore unknown command " + order );
-                break;
+                throw new InvalidInstruction( "'" + order + "' is an unknown command" );
         }
-        return false;
     }
 
     private Position calculateNewPosition( Position position, Orientation orientation )

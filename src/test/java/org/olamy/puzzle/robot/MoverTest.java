@@ -152,4 +152,18 @@ public class MoverTest
         Assert.assertEquals( Orientation.WEST, robot.getOrientation().asString() );
     }
 
+    @Test( expected = InvalidInstruction.class )
+    public void test_invalid_instruction()
+        throws Exception
+    {
+        RobotOrder robotOrder = new RobotOrder() //
+            .setStartPosition( new Position( 0, 0 ) ) //
+            .setStartOrientation( Orientation.build( "NORTH" ) ) //
+            .setOrders( Arrays.asList( "SOMEWHERE", "REPORT" ) );
+        RobotMoverInput moverInput = new RobotMoverInput().setRobotOrder( robotOrder );
+
+        robotMover.handleMoves( moverInput );
+
+    }
+
 }
