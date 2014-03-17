@@ -112,6 +112,27 @@ public class MoverTest
 
     }
 
+    @Test
+    public void robot_test_skip_move()
+        throws Exception
+    {
+
+        RobotOrder robotOrder = new RobotOrder() //
+            .setStartPosition( new Position( 0, 0 ) ) //
+            .setStartOrientation( Orientation.build( "NORTH" ) ) //
+            .setOrders( Arrays.asList( "MOVE", "LEFT", "MOVE", "REPORT" ) );
+        RobotMoverInput moverInput = new RobotMoverInput( Table.DEFAULT_TABLE ).setRobotOrder( robotOrder );
+
+        Robot robot = robotMover.handleMoves( moverInput );
+        Assert.assertNotNull( robot );
+
+        //Output: 0,1,WEST (second move skipped)
+        Assert.assertEquals( 0, robot.getPosition().getX() );
+        Assert.assertEquals( 1, robot.getPosition().getY() );
+        Assert.assertEquals( Orientation.WEST, robot.getOrientation().asString() );
+
+    }
+
     /**
      * assert move from input files
      */
