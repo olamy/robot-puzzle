@@ -23,6 +23,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.olamy.puzzle.robot.OutOfTableException;
 import org.olamy.puzzle.robot.RobotOrder;
+import org.olamy.puzzle.robot.Table;
 import org.olamy.puzzle.robot.UnknownOrientationException;
 import org.olamy.puzzle.robot.input.InputValidator;
 import org.olamy.puzzle.robot.input.RobotMoverInput;
@@ -108,7 +109,7 @@ public class RobotMoverInputBuilderFile
         {
             fileInputStream = new FileInputStream( this.ordersFile );
 
-            robotMoverInput = new RobotMoverInput();
+            robotMoverInput = new RobotMoverInput( Table.DEFAULT_TABLE );
 
             List<String> lines = IOUtils.readLines( fileInputStream );
             int lineIndex = 1;
@@ -133,7 +134,7 @@ public class RobotMoverInputBuilderFile
                 */
                 if ( lineIndex == 1 )
                 {
-                    robotOrder = RobotOrderUtils.buildRobotOrderStart( line );
+                    robotOrder = RobotOrderUtils.buildRobotOrderStart( line, robotMoverInput.getTable() );
                     robotMoverInput.setRobotOrder( robotOrder );
                 }
                 else

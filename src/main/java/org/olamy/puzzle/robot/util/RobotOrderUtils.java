@@ -69,6 +69,8 @@ public class RobotOrderUtils
     }
 
     /**
+     * this method can be used to parse the PLACE command
+     *
      * @param line  the order line
      * @param table the used table
      * @return build the object considering and validating the received order is a PLACE
@@ -91,11 +93,13 @@ public class RobotOrderUtils
         {
             try
             {
-                return new RobotOrder().setStartPosition( //
-                                                          new Position(
-                                                              Short.valueOf( matcher.group( 1 ) ).shortValue(), //
-                                                              Short.valueOf( matcher.group( 2 ) ).shortValue() )
-                ) //
+                Position position = new Position( Short.valueOf( matcher.group( 1 ) ).shortValue(),
+                                                  Short.valueOf( matcher.group( 2 ) ).shortValue() );
+                if ( outOfTable( table, position ) )
+                {
+                    throw new OutOfTableException( "PLACE order out of the table" );
+                }
+                return new RobotOrder().setStartPosition( position ) //
                     .setStartOrientation( Orientation.build( matcher.group( 3 ) ) );
             }
             catch ( UnknownOrientationException e )
@@ -110,6 +114,14 @@ public class RobotOrderUtils
         }
 
 
+    }
+
+    public static boolean outOfTable( Table table, Position position )
+    {
+        return position.getX() > table.getTableSize().getX() //
+            || position.getY() > table.getTableSize().getY() //
+            || position.getX() < 0//
+            || position.getY() < 0;
     }
 
 }

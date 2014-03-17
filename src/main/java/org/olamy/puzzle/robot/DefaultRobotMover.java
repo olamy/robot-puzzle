@@ -133,7 +133,7 @@ public class DefaultRobotMover
                 return true;
             case MOVE_COMMAND:
                 Position position = calculateNewPosition( robot.getPosition(), robot.getOrientation() );
-                if ( !outOfTable( table, position ) )
+                if ( !RobotOrderUtils.outOfTable( table, position ) )
                 {
                     robot.setPosition( position );
                     return true;
@@ -150,7 +150,7 @@ public class DefaultRobotMover
                 // special case can be a PLACE command so not in the switch/case !!
                 if ( StringUtils.startsWith( order, PLACE_COMMAND ) )
                 {
-                    RobotOrder robotOrder = RobotOrderUtils.buildRobotOrderStart( order );
+                    RobotOrder robotOrder = RobotOrderUtils.buildRobotOrderStart( order, table );
                     robot.setOrientation( robotOrder.getStartOrientation() );
                     robot.setPosition( robotOrder.getStartPosition() );
                     return true;
@@ -179,12 +179,5 @@ public class DefaultRobotMover
 
     }
 
-    private boolean outOfTable( Table table, Position position )
-    {
-        return position.getX() > table.getTableSize().getX() //
-            || position.getY() > table.getTableSize().getY() //
-            || position.getX() < 0//
-            || position.getY() < 0;
-    }
 
 }

@@ -19,23 +19,21 @@ package org.olamy.puzzle.robot.input;
  * under the License.
  */
 
-import org.olamy.puzzle.robot.Position;
 import org.olamy.puzzle.robot.RobotOrder;
 import org.olamy.puzzle.robot.Table;
-import org.olamy.puzzle.robot.TableSize;
 
 /**
  * @author <a href="mailto:olamy@apache.org">Olivier Lamy</a>
  */
 public class RobotMoverInput
 {
-    private Table table;
+    private final Table table;
 
     private RobotOrder robotOrder;
 
-    public RobotMoverInput()
+    public RobotMoverInput( Table table )
     {
-        // no op
+        this.table = table;
     }
 
     public RobotMoverInput( Table table, RobotOrder robotOrder )
@@ -46,18 +44,7 @@ public class RobotMoverInput
 
     public Table getTable()
     {
-        if ( table == null )
-        {
-            // we use the default table
-            table = Table.DEFAULT_TABLE;
-        }
         return table;
-    }
-
-    public RobotMoverInput setTable( Table table )
-    {
-        this.table = table;
-        return this;
     }
 
     public RobotOrder getRobotOrder()

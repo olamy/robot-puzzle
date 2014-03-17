@@ -24,8 +24,8 @@ package org.olamy.puzzle.robot;
 public class OutOfTableException
     extends Exception
 {
-    public OutOfTableException()
+    public OutOfTableException( String message )
     {
-        // no op
+        super( message );
     }
 }

@@ -21,10 +21,8 @@ package org.olamy.puzzle.robot.input.cli;
 
 import org.apache.commons.lang.SystemUtils;
 import org.olamy.puzzle.robot.OutOfTableException;
-import org.olamy.puzzle.robot.Position;
 import org.olamy.puzzle.robot.RobotOrder;
 import org.olamy.puzzle.robot.Table;
-import org.olamy.puzzle.robot.TableSize;
 import org.olamy.puzzle.robot.UnknownOrientationException;
 import org.olamy.puzzle.robot.input.InputValidator;
 import org.olamy.puzzle.robot.input.RobotMoverInput;
@@ -74,11 +72,9 @@ public class RobotMoverInputBuilderCli
              String tablePos = console.readLine();
              Table table = RobotOrderUtils.buildTable( tablePos );
              */
-            RobotMoverInput moverInput = new RobotMoverInput();
+            RobotMoverInput moverInput = new RobotMoverInput( Table.DEFAULT_TABLE );
 
-            moverInput.setTable( new Table( new TableSize( 5, 5 ) ) );
-
-            moverInput.setRobotOrder( getRobotOrder( console, writer ) );
+            moverInput.setRobotOrder( getRobotOrder( console, writer, moverInput.getTable() ) );
 
             return moverInput;
         }
@@ -88,13 +84,13 @@ public class RobotMoverInputBuilderCli
         }
     }
 
-    private RobotOrder getRobotOrder( Console console, PrintWriter writer )
+    private RobotOrder getRobotOrder( Console console, PrintWriter writer, Table table )
         throws UnknownOrientationException, OutOfTableException
     {
         writer.write( "Robot start position and orientation (sample PLACE 1,2,EAST ) : " );
         console.flush();
         String robotStart = console.readLine();
-        RobotOrder robotOrder = RobotOrderUtils.buildRobotOrderStart( robotStart );
+        RobotOrder robotOrder = RobotOrderUtils.buildRobotOrderStart( robotStart, table );
 
         writer.write( "Robot orders (sample RIGHT, LEFT, MOVE, REPORT ) (end input with empty line) : "
                           + SystemUtils.LINE_SEPARATOR );

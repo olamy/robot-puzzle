@@ -5,8 +5,6 @@ import com.google.inject.Injector;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
 import org.olamy.puzzle.robot.input.RobotMoverInput;
 import org.olamy.puzzle.robot.input.RobotMoverInputBuilder;
 import org.olamy.puzzle.robot.input.file.RobotMoverInputBuilderFile;
@@ -60,7 +58,7 @@ public class MoverTest
             .setStartOrientation( Orientation.build( "NORTH" ) ) //
             .setOrders( Arrays.asList( "MOVE", "REPORT" ) );
 
-        RobotMoverInput moverInput = new RobotMoverInput().setRobotOrder( robotOrder );
+        RobotMoverInput moverInput = new RobotMoverInput( Table.DEFAULT_TABLE ).setRobotOrder( robotOrder );
 
         Robot robot = robotMover.handleMoves( moverInput );
         Assert.assertNotNull( robot );
@@ -81,7 +79,7 @@ public class MoverTest
             .setStartPosition( new Position( 0, 0 ) ) //
             .setStartOrientation( Orientation.build( "NORTH" ) ) //
             .setOrders( Arrays.asList( "LEFT", "REPORT" ) );
-        RobotMoverInput moverInput = new RobotMoverInput().setRobotOrder( robotOrder );
+        RobotMoverInput moverInput = new RobotMoverInput( Table.DEFAULT_TABLE ).setRobotOrder( robotOrder );
 
         Robot robot = robotMover.handleMoves( moverInput );
         Assert.assertNotNull( robot );
@@ -89,6 +87,27 @@ public class MoverTest
         Assert.assertEquals( 0, robot.getPosition().getX() );
         Assert.assertEquals( 0, robot.getPosition().getY() );
         Assert.assertEquals( Orientation.WEST, robot.getOrientation().asString() );
+        //Output: 0,0,WEST
+
+    }
+
+    @Test
+    public void robot_test_third_case()
+        throws Exception
+    {
+
+        RobotOrder robotOrder = new RobotOrder() //
+            .setStartPosition( new Position( 0, 0 ) ) //
+            .setStartOrientation( Orientation.build( "NORTH" ) ) //
+            .setOrders( Arrays.asList( "RIGHT", "REPORT" ) );
+        RobotMoverInput moverInput = new RobotMoverInput( Table.DEFAULT_TABLE ).setRobotOrder( robotOrder );
+
+        Robot robot = robotMover.handleMoves( moverInput );
+        Assert.assertNotNull( robot );
+
+        Assert.assertEquals( 0, robot.getPosition().getX() );
+        Assert.assertEquals( 0, robot.getPosition().getY() );
+        Assert.assertEquals( Orientation.EAST, robot.getOrientation().asString() );
         //Output: 0,0,WEST
 
     }
@@ -122,7 +141,7 @@ public class MoverTest
             .setStartPosition( new Position( 0, 0 ) ) //
             .setStartOrientation( Orientation.build( "SOUTH" ) ) //
             .setOrders( Arrays.asList( "MOVE", "MOVE", "REPORT" ) );
-        RobotMoverInput moverInput = new RobotMoverInput().setRobotOrder( robotOrder );
+        RobotMoverInput moverInput = new RobotMoverInput( Table.DEFAULT_TABLE ).setRobotOrder( robotOrder );
 
         Robot robot = robotMover.handleMoves( moverInput );
         Assert.assertNotNull( robot );
@@ -142,7 +161,7 @@ public class MoverTest
             .setStartPosition( new Position( 0, 0 ) ) //
             .setStartOrientation( Orientation.build( "NORTH" ) ) //
             .setOrders( Arrays.asList( "MOVE", "LEFT", "MOVE", "REPORT" ) );
-        RobotMoverInput moverInput = new RobotMoverInput().setRobotOrder( robotOrder );
+        RobotMoverInput moverInput = new RobotMoverInput( Table.DEFAULT_TABLE ).setRobotOrder( robotOrder );
 
         Robot robot = robotMover.handleMoves( moverInput );
         Assert.assertNotNull( robot );
@@ -159,9 +178,26 @@ public class MoverTest
             .setStartPosition( new Position( 0, 0 ) ) //
             .setStartOrientation( Orientation.build( "NORTH" ) ) //
             .setOrders( Arrays.asList( "SOMEWHERE", "REPORT" ) );
-        RobotMoverInput moverInput = new RobotMoverInput().setRobotOrder( robotOrder );
+        RobotMoverInput moverInput = new RobotMoverInput( Table.DEFAULT_TABLE ).setRobotOrder( robotOrder );
 
         robotMover.handleMoves( moverInput );
+    }
+
+    @Test
+    public void test_with_place_order()
+        throws Exception
+    {
+        RobotOrder robotOrder = new RobotOrder() //
+            .setStartPosition( new Position( 0, 0 ) ) //
+            .setStartOrientation( Orientation.build( "NORTH" ) ) //
+            .setOrders( Arrays.asList( "MOVE", "REPORT", "PLACE 1,3,SOUTH", "MOVE", "REPORT" ) );
+        RobotMoverInput moverInput = new RobotMoverInput( Table.DEFAULT_TABLE ).setRobotOrder( robotOrder );
+
+        Robot robot = robotMover.handleMoves( moverInput );
+        Assert.assertNotNull( robot );
+        Assert.assertEquals( 1, robot.getPosition().getX() );
+        Assert.assertEquals( 2, robot.getPosition().getY() );
+        Assert.assertEquals( Orientation.SOUTH, robot.getOrientation().asString() );
 
     }
 
