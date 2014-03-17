@@ -20,6 +20,7 @@ package org.olamy.puzzle.robot.input.cli;
  */
 
 import org.apache.commons.lang.SystemUtils;
+import org.olamy.puzzle.robot.OutOfTableException;
 import org.olamy.puzzle.robot.Position;
 import org.olamy.puzzle.robot.RobotOrder;
 import org.olamy.puzzle.robot.Table;
@@ -88,7 +89,7 @@ public class RobotMoverInputBuilderCli
     }
 
     private RobotOrder getRobotOrder( Console console, PrintWriter writer )
-        throws UnknownOrientationException
+        throws UnknownOrientationException, OutOfTableException
     {
         writer.write( "Robot start position and orientation (sample PLACE 1,2,EAST ) : " );
         console.flush();

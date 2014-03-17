@@ -21,6 +21,7 @@ package org.olamy.puzzle.robot.input.file;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.olamy.puzzle.robot.OutOfTableException;
 import org.olamy.puzzle.robot.RobotOrder;
 import org.olamy.puzzle.robot.UnknownOrientationException;
 import org.olamy.puzzle.robot.input.InputValidator;
@@ -77,20 +78,24 @@ public class RobotMoverInputBuilderFile
         }
         catch ( IOException e )
         {
-            throw new RuntimeException( "error during reading file " + this.ordersFile.getPath(), e );
+            throw new RuntimeException( "error during reading file: " + this.ordersFile.getPath(), e );
         }
         catch ( NumberFormatException e )
         {
-            throw new RuntimeException( "error during parsing content file " + this.ordersFile.getPath(), e );
+            throw new RuntimeException( "error during parsing content file: " + this.ordersFile.getPath(), e );
         }
         catch ( UnknownOrientationException e )
         {
-            throw new RuntimeException( "error during parsing Orientation " + e.getMessage(), e );
+            throw new RuntimeException( "error during parsing Orientation: " + e.getMessage(), e );
+        }
+        catch ( OutOfTableException e )
+        {
+            throw new RuntimeException( "out of table PLACE order: " + e.getMessage(), e );
         }
     }
 
     private void buildInput()
-        throws IOException, NumberFormatException, UnknownOrientationException
+        throws IOException, NumberFormatException, UnknownOrientationException, OutOfTableException
     {
         log.debug( "buildInput from file {}", this.ordersFile.getPath() );
         FileInputStream fileInputStream = null;

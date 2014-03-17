@@ -21,6 +21,7 @@ package org.olamy.puzzle.robot.util;
 
 import org.apache.commons.lang.StringUtils;
 import org.olamy.puzzle.robot.Orientation;
+import org.olamy.puzzle.robot.OutOfTableException;
 import org.olamy.puzzle.robot.Position;
 import org.olamy.puzzle.robot.RobotOrder;
 import org.olamy.puzzle.robot.Table;
@@ -50,9 +51,14 @@ public class RobotOrderUtils
         // no op
     }
 
+    /**
+     * @param line table line order creation x,y
+     * @return the {@link org.olamy.puzzle.robot.Table}
+     * @throws java.lang.IllegalArgumentException if incorrect line order
+     */
     public static Table buildTable( String line )
     {
-        String[] tableStart = StringUtils.split( line, ' ' );
+        String[] tableStart = StringUtils.split( line, ',' );
 
         // check tableStart length == 2
         if ( tableStart.length != 2 )
@@ -64,11 +70,13 @@ public class RobotOrderUtils
 
     /**
      * @param line the order line
-     * @return build the object considering and validating the received order is a PLACE (otherwise throw an {@link java.lang.IllegalArgumentException}
-     * @throws UnknownOrientationException
+     * @return build the object considering and validating the received order is a PLACE
+     * @throws UnknownOrientationException                if the orientation is not correct
+     * @throws java.lang.IllegalArgumentException         if the line order is not correct to a PLACE order
+     * @throws org.olamy.puzzle.robot.OutOfTableException if the start position is out of the table
      */
     public static RobotOrder buildRobotOrderStart( String line )
-        throws UnknownOrientationException
+        throws OutOfTableException
     {
         // line content : PLACE x y orientation ( PLACE 0,0,NORTH )
 
@@ -80,11 +88,19 @@ public class RobotOrderUtils
         Matcher matcher = PLACE_ORDER_PATTERN.matcher( line );
         if ( matcher.matches() )
         {
-            return new RobotOrder().setStartPosition( //
-                                                      new Position( Short.valueOf( matcher.group( 1 ) ).shortValue(), //
-                                                                    Short.valueOf( matcher.group( 2 ) ).shortValue() )
-            ) //
-                .setStartOrientation( Orientation.build( matcher.group( 3 ) ) );
+            try
+            {
+                return new RobotOrder().setStartPosition( //
+                                                          new Position( Short.valueOf( matcher.group( 1 ) ).shortValue(), //
+                                                                        Short.valueOf( matcher.group( 2 ) ).shortValue() )
+                ) //
+                    .setStartOrientation( Orientation.build( matcher.group( 3 ) ) );
+            }
+            catch ( UnknownOrientationException e )
+            {
+                // cannot normally not happen as the pattern take care of the possible orientation values
+                throw new IllegalArgumentException( "robot PLACE order '" + line + "' is not correct " );
+            }
         }
         else
         {

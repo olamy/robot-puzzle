@@ -73,12 +73,16 @@ public class DefaultRobotMover
             // normally cannot happened because we have controlled input before but
             throw new InvalidInstruction( e );
         }
+        catch ( OutOfTableException e )
+        {
+            throw new InvalidInstruction( e );
+        }
 
         return robot;
     }
 
     private void applyOrders( List<String> orders, Robot robot, Table table )
-        throws UnknownOrientationException, InvalidInstruction
+        throws UnknownOrientationException, InvalidInstruction, OutOfTableException
     {
         for ( String order : orders )
         {
@@ -118,7 +122,7 @@ public class DefaultRobotMover
      * @throws UnknownOrientationException
      */
     protected boolean applyOrder( Robot robot, String order, Table table )
-        throws UnknownOrientationException, InvalidInstruction
+        throws UnknownOrientationException, InvalidInstruction, OutOfTableException
     {
         log.debug( "move {} with order {}", robot, order );
         switch ( order )

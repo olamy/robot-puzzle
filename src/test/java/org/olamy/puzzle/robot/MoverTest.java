@@ -15,7 +15,6 @@ import org.olamy.puzzle.robot.input.file.RobotMoverInputFileModule;
 import java.io.File;
 import java.util.Arrays;
 
-@RunWith( BlockJUnit4ClassRunner.class )
 public class MoverTest
 {
     Injector injector;
